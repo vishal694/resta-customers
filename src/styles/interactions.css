@@ -1,0 +1,260 @@
+/* Press feedback, transitions, and motion — desktop + touch */
+
+:root {
+  --press-duration: 0.12s;
+  --press-ease: cubic-bezier(0.34, 1.2, 0.64, 1);
+  --ui-duration: 0.22s;
+  --ui-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Faster taps on mobile; no double-tap zoom delay */
+button,
+[role='button'] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Shared press feel for app controls */
+.cart-button,
+.category-button,
+.ingredient-toggle,
+.quantity-btn-menu,
+.add-to-cart-btn,
+.quantity-btn,
+.remove-btn,
+.checkout-btn,
+.cart-close-btn,
+.ingredient-modal-close,
+.offer-action,
+.offer-nav,
+.offer-dot,
+.filter-button {
+  transition:
+    transform var(--press-duration) var(--press-ease),
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    color 0.18s ease;
+}
+
+.cart-button:active,
+.category-button:active,
+.ingredient-toggle:active,
+.quantity-btn-menu:active,
+.add-to-cart-btn:active,
+.quantity-btn:active,
+.remove-btn:active,
+.checkout-btn:active,
+.cart-close-btn:active,
+.ingredient-modal-close:active,
+.offer-action:active,
+.offer-dot:active,
+.filter-button:active {
+  transform: scale(0.96);
+}
+
+.offer-nav:active {
+  transform: translateY(-50%) scale(0.92);
+}
+
+@media (hover: hover) {
+  .category-button:not(.active):active {
+    transform: scale(0.97);
+  }
+
+  .category-button.active:active {
+    transform: scale(0.98);
+  }
+}
+
+.category-button.active {
+  transition:
+    transform var(--press-duration) var(--press-ease),
+    background-color 0.25s var(--ui-ease),
+    color 0.25s var(--ui-ease),
+    border-color 0.25s var(--ui-ease);
+}
+
+.add-to-cart-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ingredient modal */
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.ingredient-modal-backdrop {
+  animation: backdrop-in 0.2s var(--ui-ease) both;
+}
+
+.ingredient-modal {
+  animation: modal-in 0.28s var(--ui-ease) both;
+}
+
+/* Cart panel entrance */
+@keyframes cart-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(1.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.cart-menu {
+  animation: cart-slide-in 0.3s var(--ui-ease) both;
+}
+
+/* Menu card stagger feel when grid updates (subtle) */
+@keyframes card-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.menu-card {
+  animation: card-fade-in 0.35s var(--ui-ease) both;
+}
+
+.menu-grid .menu-card:nth-child(1) {
+  animation-delay: 0ms;
+}
+.menu-grid .menu-card:nth-child(2) {
+  animation-delay: 35ms;
+}
+.menu-grid .menu-card:nth-child(3) {
+  animation-delay: 70ms;
+}
+.menu-grid .menu-card:nth-child(4) {
+  animation-delay: 105ms;
+}
+.menu-grid .menu-card:nth-child(n + 5) {
+  animation-delay: 140ms;
+}
+
+/* Loading pulse for async panels */
+@keyframes content-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.menu-status[role='status'],
+.ingredient-unavailable[role='status'] {
+  animation: content-pulse 1.2s ease-in-out infinite;
+}
+
+@media (max-width: 768px) {
+  .menu-card {
+    animation-duration: 0.22s;
+  }
+
+  .menu-grid .menu-card:nth-child(n) {
+    animation-delay: 0ms;
+  }
+
+  .cart-menu {
+    animation: cart-slide-in 0.26s var(--ui-ease) both;
+  }
+
+  .ingredient-modal-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .ingredient-modal {
+    width: 100%;
+    max-height: 88vh;
+    border-radius: 20px 20px 0 0;
+    animation: modal-sheet-in 0.32s var(--ui-ease) both;
+  }
+}
+
+@keyframes modal-sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ingredient-modal-backdrop,
+  .ingredient-modal,
+  .cart-menu,
+  .menu-card,
+  .menu-status[role='status'],
+  .ingredient-unavailable[role='status'] {
+    animation: none;
+  }
+
+  .cart-button,
+  .category-button,
+  .ingredient-toggle,
+  .quantity-btn-menu,
+  .add-to-cart-btn,
+  .quantity-btn,
+  .remove-btn,
+  .checkout-btn,
+  .cart-close-btn,
+  .ingredient-modal-close,
+  .offer-action,
+  .offer-nav,
+  .offer-dot,
+  .filter-button {
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .cart-button:active,
+  .category-button:active,
+  .ingredient-toggle:active,
+  .quantity-btn-menu:active,
+  .add-to-cart-btn:active,
+  .quantity-btn:active,
+  .remove-btn:active,
+  .checkout-btn:active,
+  .cart-close-btn:active,
+  .ingredient-modal-close:active,
+  .offer-action:active,
+  .offer-nav:active,
+  .offer-dot:active,
+  .filter-button:active {
+    transform: none;
+  }
+
+  .offer-nav:active {
+    transform: translateY(-50%);
+  }
+}

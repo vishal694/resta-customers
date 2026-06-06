@@ -1,9 +1,16 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import App from './App';
+import { installMenuApiMock } from './test/mockMenuApi';
 
-test('renders learn react link', () => {
+beforeEach(() => {
+  installMenuApiMock();
+});
+
+test('renders restaurant headline', async () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  expect(screen.getByText(/Grand Bites/i)).toBeInTheDocument();
+  await waitFor(() => {
+    expect(screen.getByText(/Bruschetta al Pomodoro/i)).toBeInTheDocument();
+  });
 });
