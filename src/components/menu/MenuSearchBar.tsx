@@ -7,6 +7,8 @@ interface MenuSearchBarProps {
   onFilterClick?: () => void;
   isVegetarian: boolean;
   onVegetarianChange: (value: boolean) => void;
+  maxCalories?: number | null;
+  maxFat?: number | null;
 }
 
 const MenuSearchBar: React.FC<MenuSearchBarProps> = ({
@@ -15,10 +17,15 @@ const MenuSearchBar: React.FC<MenuSearchBarProps> = ({
   onFilterClick: onFilterClickProp,
   isVegetarian,
   onVegetarianChange,
+  maxCalories,
+  maxFat,
 }) => {
   const handleFilterToggle = () => {
     if (onFilterClickProp) onFilterClickProp();
   };
+
+  const hasActiveFilters = isVegetarian || maxCalories !== null || maxFat !== null;
+
   return (
     <div className="search-panel menu-search-panel">
       <div className="search-field">
@@ -41,9 +48,23 @@ const MenuSearchBar: React.FC<MenuSearchBarProps> = ({
               <FilterListIcon className="filter-icon" />
             </button>
 
-            {isVegetarian && (
-              <div className="veg-badge" aria-hidden>
-                veg
+            {hasActiveFilters && (
+              <div className="filter-badges">
+                {isVegetarian && (
+                  <div className="veg-badge" aria-hidden>
+                    veg
+                  </div>
+                )}
+                {maxCalories !== null && (
+                  <div className="filter-badge calories-badge" aria-hidden>
+                    ≤{maxCalories}cal
+                  </div>
+                )}
+                {maxFat !== null && (
+                  <div className="filter-badge fat-badge" aria-hidden>
+                    ≤{maxFat}g fat
+                  </div>
+                )}
               </div>
             )}
           </div>

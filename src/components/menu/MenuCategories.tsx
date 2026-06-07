@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Switch from '@mui/material/Switch';
+import Slider from '@mui/material/Slider';
 import { useMenuCategories } from '../../hooks/useMenuCategories';
 import { useMenuFilter } from '../../hooks/useMenuFilter';
 import { useMenuItems } from '../../hooks/useMenuItems';
@@ -31,6 +32,8 @@ const MenuCategories: React.FC<MenuCategoriesProps> = ({ onAddToCart }) => {
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [vegetarianOnly, setVegetarianOnly] = useState(false);
+  const [maxCalories, setMaxCalories] = useState<number | null>(null);
+  const [maxFat, setMaxFat] = useState<number | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   const categoryId = useMemo(() => {
@@ -69,7 +72,9 @@ const MenuCategories: React.FC<MenuCategoriesProps> = ({ onAddToCart }) => {
   const filteredItems = useMenuFilter(
     categoryItems,
     searchTerm,
-    vegetarianOnly
+    vegetarianOnly,
+    maxCalories,
+    maxFat
   );
 
   const updateQuantity = (id: number, value: number) => {
@@ -107,6 +112,8 @@ const MenuCategories: React.FC<MenuCategoriesProps> = ({ onAddToCart }) => {
         onFilterClick={() => setFiltersOpen((s) => !s)}
         isVegetarian={vegetarianOnly}
         onVegetarianChange={setVegetarianOnly}
+        maxCalories={maxCalories}
+        maxFat={maxFat}
       />
       {filtersOpen && (
         <ClickAwayListener onClickAway={() => setFiltersOpen(false)}>
@@ -127,6 +134,76 @@ const MenuCategories: React.FC<MenuCategoriesProps> = ({ onAddToCart }) => {
                   }
                 }}
               />
+            </div>
+            <div className="filter-row-inline">
+              <span className="filter-label">Calories</span>
+              <div className="filter-slider-container">
+                <Slider
+                  value={maxCalories || 1000}
+                  onChange={(e, value) => setMaxCalories(value as number)}
+                  min={100}
+                  max={1000}
+                  step={50}
+                  valueLabelDisplay="auto"
+                  className="filter-slider"
+                  sx={{
+                    width: '140px',
+                    '& .MuiSlider-thumb': {
+                      backgroundColor: '#34c759',
+                    },
+                    '& .MuiSlider-track': {
+                      backgroundColor: '#34c759',
+                    },
+                    '& .MuiSlider-rail': {
+                      backgroundColor: '#e5e7eb',
+                    }
+                  }}
+                  aria-label="Max calories"
+                />
+                <button
+                  className="filter-clear-btn"
+                  onClick={() => setMaxCalories(null)}
+                  title="Clear calories filter"
+                  aria-label="Clear calories filter"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+            <div className="filter-row-inline">
+              <span className="filter-label">Fat</span>
+              <div className="filter-slider-container">
+                <Slider
+                  value={maxFat || 100}
+                  onChange={(e, value) => setMaxFat(value as number)}
+                  min={5}
+                  max={100}
+                  step={5}
+                  valueLabelDisplay="auto"
+                  className="filter-slider"
+                  sx={{
+                    width: '140px',
+                    '& .MuiSlider-thumb': {
+                      backgroundColor: '#f59e0b',
+                    },
+                    '& .MuiSlider-track': {
+                      backgroundColor: '#f59e0b',
+                    },
+                    '& .MuiSlider-rail': {
+                      backgroundColor: '#e5e7eb',
+                    }
+                  }}
+                  aria-label="Max fat (g)"
+                />
+                <button
+                  className="filter-clear-btn"
+                  onClick={() => setMaxFat(null)}
+                  title="Clear fat filter"
+                  aria-label="Clear fat filter"
+                >
+                  ✕
+                </button>
+              </div>
             </div>
           </div>
         </ClickAwayListener>
