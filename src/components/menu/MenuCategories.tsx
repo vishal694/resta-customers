@@ -116,7 +116,13 @@ const MenuCategories: React.FC<MenuCategoriesProps> = ({ onAddToCart }) => {
         maxFat={maxFat}
       />
       {filtersOpen && (
-        <ClickAwayListener onClickAway={() => setFiltersOpen(false)}>
+        <ClickAwayListener
+          onClickAway={(event) => {
+            const target = (event as any)?.target as HTMLElement | null;
+            if (target && target.closest('.filter-button')) return;
+            setFiltersOpen(false);
+          }}
+        >
           <div className="filter-inline" role="region" aria-label="Filters">
             <div className="filter-row-inline">
               <span className="filter-label">Veg-only</span>
