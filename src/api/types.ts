@@ -31,6 +31,8 @@ export interface ApiOffer {
   badge: string;
   action: string;
   accent: string;
+  itemId: number;
+  offerId: number;
 }
 
 export interface ApiIngredient {
