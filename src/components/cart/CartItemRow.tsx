@@ -14,40 +14,52 @@ const CartItemRow: React.FC<CartItemRowProps> = ({
   onRemove,
 }) => (
   <div className="cart-item">
-    <div className="item-info">
-      <span className="item-name">{item.name}</span>
-      <div className="quantity-controls">
+    <div className="item-thumbnail">
+      <img
+        src={item.image || 'https://via.placeholder.com/80?text=Food'}
+        alt={item.name}
+      />
+    </div>
+
+    <div className="item-main">
+      <div className="item-title-row">
+        <span className="item-name">{item.name}</span>
+        <div className="quantity-controls">
+          <button
+            type="button"
+            className="quantity-btn"
+            onClick={() => onUpdateQuantity(item.id, -1)}
+          >
+            −
+          </button>
+          <input
+            className="quantity-input"
+            type="number"
+            min={1}
+            value={item.quantity}
+            readOnly
+            aria-label={`Quantity for ${item.name}`}
+          />
+          <button
+            type="button"
+            className="quantity-btn"
+            onClick={() => onUpdateQuantity(item.id, 1)}
+          >
+            +
+          </button>
+        </div>
+      </div>
+      <div className="item-meta-row">
         <button
           type="button"
-          className="quantity-btn"
-          onClick={() => onUpdateQuantity(item.id, -1)}
+          className="remove-btn"
+          onClick={() => onRemove(item.id)}
         >
-          −
-        </button>
-        <input
-          className="quantity-input"
-          type="number"
-          min={1}
-          value={item.quantity}
-          readOnly
-          aria-label={`Quantity for ${item.name}`}
-        />
-        <button
-          type="button"
-          className="quantity-btn"
-          onClick={() => onUpdateQuantity(item.id, 1)}
-        >
-          +
+          Remove
         </button>
       </div>
-      <button
-        type="button"
-        className="remove-btn"
-        onClick={() => onRemove(item.id)}
-      >
-        Remove
-      </button>
     </div>
+
     <span className="item-price">
       {formatCurrency(item.price * item.quantity)}
     </span>
