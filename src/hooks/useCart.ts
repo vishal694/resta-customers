@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { CartItem } from '../types/cart';
 import { MenuItem } from '../types/menu';
 import { parsePrice } from '../utils/price';
+import { TABLE_CODE_MAP } from '../utils/tableCodeMap';
 
 const STORAGE_KEY = 'resta_customers_current_session';
 
@@ -14,12 +15,22 @@ type SessionShape = {
 
 const getTableIdFromUrl = (): string => {
   const searchParams = new URLSearchParams(window.location.search);
-  return (
+  const explicitTableId =
     searchParams.get('table') ??
     searchParams.get('table_id') ??
-    searchParams.get('tableId') ??
-    'unknown'
-  );
+    searchParams.get('tableId');
+
+  if (explicitTableId) {
+    return explicitTableId;
+  }
+
+  const pathMatch = window.location.pathname.match(/\/s\/([^/]+)\/?$/);
+  if (pathMatch?.[1]) {
+    const code = decodeURIComponent(pathMatch[1]);
+    return TABLE_CODE_MAP[code] ?? 'unknown';
+  }
+
+  return 'unknown';
 };
 
 const generateSessionId = (): string =>
